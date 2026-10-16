@@ -1,0 +1,13 @@
+{
+  "name": "ir-update-studio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "IR source-file code updater with a Vercel serverless API",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "mammoth": "^1.10.0",
+    "xlsx": "^0.18.5"
+  }
+}
