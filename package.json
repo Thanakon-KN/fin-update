@@ -1,12 +1,18 @@
 {
-  "name": "ir-update-studio",
-  "version": "1.0.0",
+  "name": "financial-highlights-chatgpt-app",
+  "version": "0.1.0",
   "private": true,
-  "description": "Financial Highlights workbook code updater with a Vercel serverless API",
-  "engines": {
-    "node": ">=20"
+  "type": "module",
+  "description": "Local Financial Highlights updater using Sign in with ChatGPT",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron ."
   },
   "dependencies": {
+    "@siwc/local": "*",
     "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "electron": "^39.0.0"
   }
 }

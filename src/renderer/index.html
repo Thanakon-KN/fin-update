@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f4f7f3">
+  <title>Financial Highlights Updater</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar"><div class="top-inner"><div class="brand"><span class="mark">FH</span><span>Financial Highlights Updater</span></div><div class="account"><span id="auth-status" class="badge">ยังไม่เชื่อมบัญชี</span><button id="connect" class="button primary">เชื่อมต่อ ChatGPT</button><button id="disconnect" class="button quiet" hidden>ออกจากระบบ</button></div></div></header>
+  <main>
+    <section class="hero"><div class="eyebrow">LOCAL APP · CHATGPT PLAN CONSENT</div><h1>อัปเดต Financial Highlights</h1><p>เลือก workbook และวางโค้ดเดิม แอปจะตรวจชีต Financial Highlights แล้วส่งโค้ดที่อัปเดตแล้วกลับมา โดยไม่แสดงคำสั่งภายใน</p></section>
+    <div class="notice"><strong>การใช้บัญชี</strong><span>ต้องเชื่อมบัญชี ChatGPT และอนุญาตให้แอปใช้แผนของคุณก่อน ระบบจะส่งเฉพาะชีต Financial Highlights กับโค้ดที่วางมาเพื่อประมวลผล</span></div>
+    <section class="grid">
+      <div class="card"><div class="card-head"><h2>ข้อมูลต้นฉบับ</h2><span>01</span></div><div class="card-body">
+        <div class="field"><label for="locale">ภาษา</label><select id="locale"><option value="ไทย">ไทย</option><option value="อังกฤษ">อังกฤษ</option><option value="ไทยและอังกฤษ">ไทยและอังกฤษ</option></select></div>
+        <div class="field"><label for="workbook">ไฟล์ Excel</label><input id="workbook" type="file" accept=".xlsx,.xls,.xlsm"><small class="hint">ใช้ชีต Financial Highlights ใน workbook · ไฟล์ถูกอ่านในเครื่อง</small><div id="file-name" class="file-name">ยังไม่ได้เลือกไฟล์</div></div>
+        <div class="field"><label for="html-code">HTML / Vue</label><textarea id="html-code" spellcheck="false" placeholder="วาง HTML หรือ Vue เดิม"></textarea></div>
+        <div class="field"><label for="javascript-code">JavaScript</label><textarea id="javascript-code" class="js" spellcheck="false" placeholder="วาง JavaScript หรือ window.chart เดิม"></textarea></div>
+        <div class="field"><label for="model">โมเดล</label><select id="model" disabled><option>เชื่อมต่อบัญชีก่อน</option></select></div>
+        <div class="actions"><button id="update" class="button primary" disabled>ประมวลผลและอัปเดต</button><button id="clear" class="button quiet">ล้างข้อมูล</button></div><div id="status" class="status" role="status"></div>
+      </div></div>
+      <div class="card results"><div class="card-head"><h2>โค้ดที่อัปเดตแล้ว</h2><span>02</span></div><div class="card-body output">
+        <div class="result-section"><div class="result-title"><label for="html-output">HTML / Vue</label><button class="copy" data-copy="html-output" disabled>คัดลอก</button></div><textarea id="html-output" spellcheck="false" readonly placeholder="ผลลัพธ์ HTML/Vue จะแสดงที่นี่"></textarea><button class="download" data-download="html-output" data-name="financial-highlights.html" disabled>ดาวน์โหลด HTML</button></div>
+        <div class="result-section"><div class="result-title"><label for="js-output">JavaScript</label><button class="copy" data-copy="js-output" disabled>คัดลอก</button></div><textarea id="js-output" spellcheck="false" readonly placeholder="ผลลัพธ์ JavaScript จะแสดงที่นี่"></textarea><button class="download" data-download="js-output" data-name="financial-highlights.js" disabled>ดาวน์โหลด JavaScript</button></div>
+        <div id="notes-box" class="notes" hidden><strong>หมายเหตุจากแหล่งข้อมูล</strong><ul id="notes"></ul></div>
+      </div></div>
+    </section>
+    <footer>ต้นแบบใช้งานในเครื่อง · ต้องมีบัญชี ChatGPT ที่เข้าเกณฑ์ · ไม่ต้องใส่ OpenAI API key</footer>
+  </main>
+  <script src="renderer.js"></script>
+</body></html>

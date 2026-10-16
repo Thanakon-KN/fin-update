@@ -1,36 +1,47 @@
-# Financial Highlights Updater
+# Financial Highlights Updater (Local)
 
-เว็บสำหรับอัปเดตโค้ด Financial Highlights จาก workbook โดยรับโค้ด HTML/Vue และ JavaScript เดิมแยกช่อง พร้อมไฟล์ต้นทาง `.xlsx`, `.xls`, `.csv` หรือ `.tsv` แล้วส่งคืนโค้ดที่อัปเดตแล้วแยกช่อง
+ต้นแบบแอปโอเพนซอร์สที่รันบนเครื่องผู้ใช้ ให้ผู้ใช้ลงชื่อเข้าใช้และอนุญาตให้แอปใช้แผน ChatGPT จากนั้นอัปเดต HTML/Vue และ JavaScript ของ Financial Highlights จาก workbook โดยไม่แสดงคำสั่งภายใน
 
-## ข้อมูลที่ต้องใส่
+ต้นแบบนี้เรียกโมเดลผ่าน Sign in with ChatGPT และฝังกฎการทำงาน Financial Highlights ไว้ในแอป จึงไม่ได้เรียก skill ที่ติดตั้งอยู่ใน Codex app โดยตรง และไม่ได้ใช้ API key ของเจ้าของแอป
 
-- เลือกภาษาเว็บ: ไทย, อังกฤษ หรือทั้งสองภาษา
-- วาง HTML/Vue และ/หรือ JavaScript ที่ต้องการอัปเดต หรือระบุ path ของไฟล์โค้ด
-- แนบ workbook/CSV ที่มีข้อมูล Financial Highlights ระบบอ่านงวดจากไฟล์ ไม่ต้องกรอกงวดเอง
+แอปนี้เป็นตัวอย่างสำหรับติดตั้งและรันในเครื่อง โค้ดใน GitHub เป็นแหล่งแจกจ่าย ไม่ใช่บริการประมวลผลบน GitHub Pages เอกสาร Sign in with ChatGPT ระบุว่า plan usage ในปัจจุบันรองรับแอปโอเพนซอร์สและแอปที่รันในเครื่อง ส่วนแอปที่โฮสต์ระยะไกลต้องขอสิทธิ์ก่อน
 
-ระบบใช้เฉพาะชีตที่ชื่อ Financial Highlights และอัปเดตเนื้อหาสำหรับ Financial Highlights เท่านั้น โดยใช้แถวสรุปสำหรับ chart/card และแถวรายละเอียดสำหรับตารางตามโครงสร้างใน workbook
+## เริ่มใช้งานบน Windows
 
-## Deploy สำหรับ GitHub Pages
+1. ติดตั้ง Node.js รุ่นปัจจุบัน
+2. แตกไฟล์ ZIP หรือ clone repository
+3. เปิด PowerShell ในโฟลเดอร์โปรเจกต์ แล้วรัน:
 
-GitHub Pages เสิร์ฟหน้าเว็บแบบ static ส่วน API ต้อง deploy แยกบน Vercel
+   ```powershell
+   npm install
+   npm start
+   ```
 
-1. Push โฟลเดอร์โปรเจกต์นี้ขึ้น GitHub
-2. Import repository เข้า Vercel และ deploy API พร้อมหน้าเว็บ
-3. หลัง Vercel deploy เสร็จ ให้นำ origin ของ Vercel เช่น `https://your-project.vercel.app` ไปใส่ใน `api-config.js` และ `dist/api-config.js`:
-   - `window.IR_UPDATE_API_BASE_URL = 'https://your-project.vercel.app';`
-   - ถ้า frontend และ API ใช้ Vercel origin เดียวกัน ให้ปล่อยค่าว่างไว้
-4. ตั้ง Environment Variables ใน Vercel:
-   - `OPENAI_API_KEY` — API key สำหรับ backend เท่านั้น
-   - `OPENAI_MODEL` — ไม่บังคับ; ค่าเริ่มต้น `gpt-6-astra`
-   - `ALLOWED_ORIGINS` — `https://thanakon-kn.github.io` เพื่ออนุญาตให้หน้า GitHub Pages เรียก API
-5. Commit การเปลี่ยนแปลง แล้วเปิด GitHub Pages URL อีกครั้ง
+4. กด **เชื่อมต่อ ChatGPT** แล้วลงชื่อเข้าใช้และอนุญาตใช้แผน ChatGPT
+5. เลือก workbook ที่มีชีต `Financial Highlights` วางโค้ด HTML/Vue และ JavaScript แล้วกด **ประมวลผลและอัปเดต**
+6. ตรวจผลลัพธ์และหมายเหตุ แล้วคัดลอกหรือดาวน์โหลด HTML/JavaScript
 
-อย่าใส่ API key ใน `api-config.js`, `dist/api-config.js`, HTML/JavaScript ฝั่ง browser หรือ GitHub repository
+ไม่ต้องตั้งค่า `OPENAI_API_KEY` โทเคนการอนุญาตเก็บและใช้โดยตัวช่วยในเครื่องตามความสามารถของ `@siwc/local` ไม่ส่งไปยัง GitHub Pages
 
-## ข้อจำกัด
+## เผยแพร่ source บน GitHub
 
-- ไฟล์ต้นทางรวมไม่เกิน 2.4 MB ต่อคำขอ, snippet รวมไม่เกิน 300,000 ตัวอักษร และข้อมูลที่สกัดได้ไม่เกิน 500,000 ตัวอักษร
-- ถ้า workbook ไม่มีชีตชื่อ Financial Highlights ระบบจะแจ้งชื่อชีตที่พบ และไม่ใช้ข้อมูลจากชีตอื่น
-- ไฟล์และโค้ดจะถูกส่งจาก backend ไปยัง OpenAI Responses API เพื่อประมวลผล โดย backend ไม่บันทึกไฟล์ลงโปรเจกต์
-- `OPENAI_API_KEY` ต้องตั้งใน environment ของ Vercel ก่อนเรียก API ได้
-- API รองรับ CORS จาก GitHub Pages origin `https://thanakon-kn.github.io` และ origins ที่ระบุใน `ALLOWED_ORIGINS`
+อัปโหลดไฟล์ทั้งหมดในโฟลเดอร์นี้ไปยัง repository ของแอป แล้วเผยแพร่ไฟล์ ZIP ใน GitHub Releases ให้ผู้ใช้ดาวน์โหลดและรันในเครื่อง หน้า GitHub Pages ใช้ทำหน้าคู่มือ/ดาวน์โหลดได้ แต่ตัวประมวลผล OAuth และ AI ต้องทำงานในแอป local นี้
+
+## ข้อจำกัดของต้นแบบ
+
+- ต้องมีบัญชี ChatGPT ที่เข้าเกณฑ์และอนุญาตการใช้แผนได้
+- รองรับเฉพาะการอัปเดตชีต `Financial Highlights`; ไม่อ่านชีตอื่น
+- workbook สูงสุด 20 MB และ workbook ถูกแปลงเป็นข้อมูลข้อความเฉพาะชีตนี้ก่อนส่งให้โมเดล
+- ผลลัพธ์ AI ต้องตรวจทานก่อนนำขึ้นเว็บไซต์
+- ต้องตรวจสอบ package/version ของ Sign in with ChatGPT และข้อกำหนด OpenAI ก่อนเผยแพร่จริง
+- ยังไม่ได้ติดตั้ง dependencies หรือทดสอบ sign-in ในสภาพแวดล้อมสร้างไฟล์นี้ เพราะเครื่องสร้างเข้าถึง npm registry ไม่ได้
+
+## โครงสร้าง
+
+- `src/main.js`: จัดการ OAuth/คำขอ AI และอ่าน workbook ใน process หลัก
+- `src/preload.js`: เปิดเฉพาะคำสั่งจำเป็นให้หน้า UI
+- `src/renderer/`: หน้าจอ local app
+
+## ความเป็นส่วนตัว
+
+ไฟล์ Excel ถูกอ่านในเครื่องและดึงเฉพาะชีต Financial Highlights ส่วนข้อมูลชีตนั้นและโค้ดที่ผู้ใช้วางจะถูกส่งไปประมวลผลด้วยโมเดลตามสิทธิ์ที่ผู้ใช้อนุญาต ห้ามใส่ข้อมูลลับที่ไม่ต้องการส่งไปยังบริการ AI
