@@ -10,18 +10,22 @@
 
 ระบบใช้เฉพาะชีตที่ชื่อ Financial Highlights และอัปเดตเนื้อหาสำหรับ Financial Highlights เท่านั้น โดยใช้แถวสรุปสำหรับ chart/card และแถวรายละเอียดสำหรับตารางตามโครงสร้างใน workbook
 
-## Deploy ด้วย GitHub และ Vercel
+## Deploy สำหรับ GitHub Pages
 
-GitHub ใช้เก็บ source code ส่วน API ทำงานบน Vercel
+GitHub Pages เสิร์ฟหน้าเว็บแบบ static ส่วน API ต้อง deploy แยกบน Vercel
 
 1. Push โฟลเดอร์โปรเจกต์นี้ขึ้น GitHub
-2. Import repository เข้า Vercel
-3. เพิ่ม Environment Variables ใน Vercel:
+2. Import repository เข้า Vercel และ deploy API พร้อมหน้าเว็บ
+3. หลัง Vercel deploy เสร็จ ให้นำ origin ของ Vercel เช่น `https://your-project.vercel.app` ไปใส่ใน `api-config.js` และ `dist/api-config.js`:
+   - `window.IR_UPDATE_API_BASE_URL = 'https://your-project.vercel.app';`
+   - ถ้า frontend และ API ใช้ Vercel origin เดียวกัน ให้ปล่อยค่าว่างไว้
+4. ตั้ง Environment Variables ใน Vercel:
    - `OPENAI_API_KEY` — API key สำหรับ backend เท่านั้น
    - `OPENAI_MODEL` — ไม่บังคับ; ค่าเริ่มต้น `gpt-6-astra`
-4. Deploy แล้วเปิด URL ของ Vercel
+   - `ALLOWED_ORIGINS` — `https://thanakon-kn.github.io` เพื่ออนุญาตให้หน้า GitHub Pages เรียก API
+5. Commit การเปลี่ยนแปลง แล้วเปิด GitHub Pages URL อีกครั้ง
 
-อย่าใส่ API key ใน `dist/index.html`, JavaScript ฝั่ง browser หรือ GitHub repository
+อย่าใส่ API key ใน `api-config.js`, `dist/api-config.js`, HTML/JavaScript ฝั่ง browser หรือ GitHub repository
 
 ## ข้อจำกัด
 
@@ -29,3 +33,4 @@ GitHub ใช้เก็บ source code ส่วน API ทำงานบน 
 - ถ้า workbook ไม่มีชีตชื่อ Financial Highlights ระบบจะแจ้งชื่อชีตที่พบ และไม่ใช้ข้อมูลจากชีตอื่น
 - ไฟล์และโค้ดจะถูกส่งจาก backend ไปยัง OpenAI Responses API เพื่อประมวลผล โดย backend ไม่บันทึกไฟล์ลงโปรเจกต์
 - `OPENAI_API_KEY` ต้องตั้งใน environment ของ Vercel ก่อนเรียก API ได้
+- API รองรับ CORS จาก GitHub Pages origin `https://thanakon-kn.github.io` และ origins ที่ระบุใน `ALLOWED_ORIGINS`

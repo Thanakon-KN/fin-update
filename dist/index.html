@@ -40,12 +40,14 @@
     </div>
     <p class="foot">IR Update Studio · ประมวลผล source file และแยกโค้ดผลลัพธ์</p>
   </main>
+  <script src="api-config.js"></script>
   <script>
     const $ = selector => document.querySelector(selector);
     const fileInput = $('#files');
     const status = $('#status');
     const updateButton = $('#update-code');
-    const UPDATE_API_ENDPOINT = '/api/update';
+    const API_BASE_URL = String(window.IR_UPDATE_API_BASE_URL || '').trim().replace(/\/+$/, '');
+    const UPDATE_API_ENDPOINT = API_BASE_URL ? `${API_BASE_URL}/api/update` : '/api/update';
     let selectedFiles = [];
     const fileSize = bytes => bytes < 1048576 ? `${(bytes / 1024).toFixed(1)} KB` : `${(bytes / 1048576).toFixed(1)} MB`;
     fileInput.addEventListener('change', () => {
@@ -70,6 +72,7 @@
     updateButton.addEventListener('click', async () => {
       const hasCode = $('#html-code').value.trim() || $('#javascript-code').value.trim();
       const allowedExt = ['.xlsx', '.xls', '.csv', '.tsv'];
+      if (location.hostname.endsWith('.github.io') && !API_BASE_URL) { status.textContent = 'ตั้งค่า URL ของ Vercel API ในไฟล์ api-config.js ก่อนใช้งาน'; return; }
       if (!selectedFiles.length) { status.textContent = 'เลือก workbook หรือไฟล์ CSV/TSV ต้นทางก่อน'; fileInput.focus(); return; }
       if (selectedFiles.some(file => !allowedExt.some(ext => file.name.toLowerCase().endsWith(ext)))) { status.textContent = 'ชนิดไฟล์ไม่ตรงกับประเภทงานที่เลือก'; fileInput.focus(); return; }
       if (selectedFiles.reduce((sum, file) => sum + file.size, 0) > 2_400_000) { status.textContent = 'ไฟล์รวมเกิน 2.4 MB กรุณาเลือกไฟล์ขนาดเล็กลง'; fileInput.focus(); return; }
@@ -118,7 +121,9 @@
       $('#backend-status').textContent = 'พร้อมรับคำขอ';
       status.textContent = '';
     });
-    $('#backend-status').textContent = 'ต้อง deploy API และตั้งค่า OPENAI_API_KEY ก่อนใช้งาน';
+    $('#backend-status').textContent = location.hostname.endsWith('.github.io') && !API_BASE_URL
+      ? 'ตั้งค่า URL ของ Vercel API ใน api-config.js'
+      : 'ต้อง deploy API และตั้งค่า OPENAI_API_KEY ก่อนใช้งาน';
   </script>
 </body>
 </html>

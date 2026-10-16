@@ -30,6 +30,24 @@ function sendJson(res, statusCode, body) {
   res.end(JSON.stringify(body));
 }
 
+function configureCors(req, res) {
+  const origin = req.headers.origin;
+  const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'https://thanakon-kn.github.io,http://127.0.0.1:4173,http://localhost:4173')
+    .split(',')
+    .map(value => value.trim())
+    .filter(Boolean);
+
+  res.setHeader('Vary', 'Origin');
+  if (!origin) return true;
+  if (!allowedOrigins.includes(origin)) return false;
+
+  res.setHeader('Access-Control-Allow-Origin', origin);
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Max-Age', '86400');
+  return true;
+}
+
 function safeName(name) {
   return String(name || 'source').replace(/[\\/\0-\x1f]/g, '_').slice(0, 160);
 }
@@ -93,6 +111,11 @@ function getOutputText(response) {
 }
 
 module.exports = async function updateHandler(req, res) {
+  if (!configureCors(req, res)) return sendJson(res, 403, { error: 'origin นี้ไม่ได้รับอนุญาตให้เรียก API' });
+  if (req.method === 'OPTIONS') {
+    res.statusCode = 204;
+    return res.end();
+  }
   if (req.method !== 'POST') return sendJson(res, 405, { error: 'รองรับเฉพาะ POST' });
   if (!process.env.OPENAI_API_KEY) return sendJson(res, 503, { error: 'ยังไม่ได้ตั้งค่า OPENAI_API_KEY ใน environment variables ของ backend' });
   const body = req.body || {};
