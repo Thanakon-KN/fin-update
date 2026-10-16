@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f7f3">
+  <meta name="description" content="อัปเดต Financial Highlights จาก workbook เป็น HTML/Vue และ JavaScript">
+  <title>Financial Highlights Updater</title>
+  <style>
+    :root{color-scheme:light;--ink:#1d2923;--muted:#69756e;--line:#e5e9e5;--paper:#f8f9f7;--green:#26704f;--green2:#1d5c40;--mint:#edf4ef;--gold:#d7b26b;--white:#fff;--mono:Consolas,"SFMono-Regular",monospace}
+    *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 "Segoe UI",Tahoma,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}
+    .topbar{height:64px;background:#fff;border-bottom:1px solid var(--line)}.top-inner{max-width:1160px;height:100%;margin:auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.025em}.mark{width:31px;height:31px;border-radius:9px;background:var(--green);color:#fff;display:grid;place-items:center;font-size:12px;letter-spacing:0}.local-badge{font-size:11px;color:#587061;background:#f1f5f1;padding:5px 9px;border-radius:7px}
+    main{max-width:1160px;margin:34px auto;padding:0 24px 56px}.eyebrow{color:var(--green);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.hero{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:23px}.hero h1{font-size:30px;line-height:1.22;letter-spacing:-.04em;margin:6px 0}.hero p{max-width:690px;color:var(--muted);margin:0;font-size:14px}.hero-mark{display:none}
+    .steps{display:flex;gap:10px;align-items:center;margin:0 0 15px;color:#7b867f;font-size:11px}.steps span{display:flex;align-items:center;gap:6px}.steps b{width:20px;height:20px;border-radius:6px;background:#edf0ed;display:grid;place-items:center;color:#69766d;font-size:10px}.steps .active{color:var(--green);font-weight:700}.steps .active b{background:var(--mint);color:var(--green)}.steps i{width:28px;height:1px;background:#e2e7e2}
+    .layout{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(340px,.92fr);gap:16px;align-items:start}.card{background:var(--white);border:1px solid var(--line);border-radius:11px;box-shadow:none;overflow:hidden}.card-head{padding:14px 17px;border-bottom:1px solid #edf0ed;display:flex;justify-content:space-between;align-items:center}.card-head h2{font-size:14px;margin:0;font-weight:680}.card-head small{font-size:10px;color:#7b887f;font-weight:700;letter-spacing:.07em}.card-body{padding:17px}.field{margin-bottom:16px}.field:last-child{margin-bottom:0}label{display:block;font-weight:650;font-size:12px;margin-bottom:6px}.hint{font-size:11px;color:var(--muted);display:block;margin-top:5px}.row{display:grid;grid-template-columns:1fr 1fr;gap:11px}input[type=text],input[type=url],select,textarea{width:100%;border:1px solid #dfe5df;border-radius:7px;background:#fff;color:var(--ink);padding:9px 10px;outline:none;font-size:13px}input:focus,select:focus,textarea:focus{border-color:#79a78a;box-shadow:0 0 0 2px #eef5ef}textarea{min-height:180px;resize:vertical;font:11px/1.6 var(--mono)}textarea.compact{min-height:78px}input[type=file]{display:block;max-width:100%;font-size:11px}.upload{border:1px dashed #cbd7cc;border-radius:8px;background:#fbfcfa;padding:12px}.upload strong{font-size:12px}.file-list{display:grid;gap:5px;margin-top:8px}.file{display:flex;justify-content:space-between;gap:12px;background:#f1f4f1;border-radius:5px;padding:6px 8px;font-size:11px;color:#45554b}.file em{font-style:normal;color:#7b867f;white-space:nowrap}.check{display:flex;align-items:flex-start;gap:9px;font-weight:500}.check input{margin-top:4px;accent-color:var(--green)}.check span{font-size:12px;color:#516259}
+    .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.btn{border:0;border-radius:7px;padding:9px 12px;font-size:12px;font-weight:650}.primary{background:var(--green);color:#fff}.primary:hover{background:var(--green2)}.secondary{background:#f0f3f0;color:#46564b}.secondary:hover{background:#e8ede8}.btn:disabled{opacity:.45;cursor:not-allowed}.result-card{position:sticky;top:16px}.result-code{height:170px;min-height:110px;resize:vertical;background:#fafbfa;font:11px/1.65 var(--mono)}.copy-result{margin-top:7px}.status{min-height:20px;margin-top:8px;color:var(--green);font-size:11px}.privacy{margin-top:11px;padding:10px 11px;background:#f6f8f5;border:1px solid #edf0eb;border-radius:7px;color:#68756c;font-size:10px}.privacy strong{color:#435c49}.foot{margin-top:20px;color:#879088;font-size:10px;text-align:center}.kbd{font:11px var(--mono);border:1px solid #dce5dd;border-radius:4px;padding:1px 5px;color:#6c796f}
+    @media(max-width:850px){main{margin-top:27px}.layout{grid-template-columns:1fr}.result-card{position:static}.result{height:330px}.hero-mark{display:none}}@media(max-width:560px){.top-inner{padding:0 15px}.local-badge{font-size:10px}main{padding:0 14px 35px}.hero h1{font-size:26px}.hero{margin-bottom:19px}.row{grid-template-columns:1fr}.card-body{padding:14px}.steps{font-size:10px}.steps i{width:16px}}
+  </style>
+</head>
+<body>
+  <header class="topbar"><div class="top-inner"><div class="brand"><span class="mark">IR</span><span>Financial Highlights Updater</span></div><span class="local-badge">Financial Highlights</span></div></header>
+  <main>
+    <section class="hero"><div><div class="eyebrow">Investor relations · Financial Highlights</div><h1>อัปเดต Financial Highlights</h1><p>แนบ workbook ที่มีข้อมูล Financial Highlights วางโค้ดเดิม แล้วรับ HTML/Vue และ JavaScript ที่อัปเดตแล้วแยกกัน</p></div><div class="hero-mark" aria-hidden="true">IR</div></section>
+    <div class="steps" aria-label="ขั้นตอน"><span class="active"><b>1</b> ใส่ข้อมูล</span><i></i><span><b>2</b> ประมวลผล</span><i></i><span><b>3</b> รับโค้ด</span></div>
+    <div class="layout">
+      <section class="card" aria-labelledby="input-title"><div class="card-head"><h2 id="input-title">ข้อมูล Financial Highlights</h2><small>01 · INPUT</small></div><div class="card-body">
+        <div class="field"><label for="locale">ภาษาของหน้าเว็บ</label><select id="locale"><option value="th">ไทย (TH)</option><option value="en">English (EN)</option><option value="both">ไทยและอังกฤษ (TH + EN)</option></select></div>
+        <div class="field"><label for="html-code">HTML / Vue</label><textarea id="html-code" spellcheck="false" placeholder="วางโค้ด HTML หรือ Vue ที่ต้องการอัปเดต"></textarea><span class="hint"><span id="html-char-count">0</span> ตัวอักษร · ระบบไม่รันโค้ดที่วาง</span></div>
+        <div class="field"><label for="javascript-code">JavaScript</label><textarea id="javascript-code" spellcheck="false" placeholder="วาง JavaScript เช่น window.chart หรือข้อมูล script ที่เกี่ยวข้อง"></textarea><span class="hint"><span id="javascript-char-count">0</span> ตัวอักษร · ระบบไม่รันโค้ดที่วาง</span></div>
+        <div class="field"><label for="files">ไฟล์ต้นทาง Financial Highlights</label><div class="upload"><strong>เลือก workbook หรือไฟล์ข้อมูลจากเครื่อง</strong><span class="hint" id="file-hint">รองรับ Excel (.xlsx, .xls) และ CSV/TSV · อ่านงวดจากไฟล์อัตโนมัติ · ไฟล์รวมไม่เกิน 2.4 MB</span><input id="files" type="file" multiple accept=".xlsx,.xls,.csv,.tsv"><div id="file-list" class="file-list" aria-live="polite"></div></div></div>
+        <div class="privacy"><strong>การใช้ข้อมูล</strong><br>ไฟล์และโค้ดจะถูกส่งไปยัง backend เพื่อประมวลผลด้วย AI โดยต้องตั้งค่า API key เป็น secret ฝั่งเซิร์ฟเวอร์ก่อนใช้งานจริง</div>
+        <div class="actions"><button class="btn primary" id="update-code">อัปเดตโค้ด</button><button class="btn secondary" id="clear">ล้างข้อมูล</button></div><div id="status" class="status" role="status" aria-live="polite"></div>
+      </div></section>
+      <section class="card result-card" aria-labelledby="result-title"><div class="card-head"><h2 id="result-title">โค้ดหลังอัปเดต</h2><small>02 · OUTPUT</small></div><div class="card-body">
+        <div class="field"><label for="html-result">HTML / Vue</label><textarea id="html-result" class="result-code" readonly placeholder="โค้ด HTML / Vue ที่อัปเดตแล้วจะแสดงตรงนี้"></textarea><button class="btn secondary copy-result" data-target="html-result" disabled>คัดลอก HTML</button></div>
+        <div class="field"><label for="javascript-result">JavaScript</label><textarea id="javascript-result" class="result-code" readonly placeholder="JavaScript ที่อัปเดตแล้วจะแสดงตรงนี้"></textarea><button class="btn secondary copy-result" data-target="javascript-result" disabled>คัดลอก JavaScript</button></div>
+        <div class="field"><label for="report-result">หมายเหตุจากการอัปเดต</label><textarea id="report-result" class="result-code" readonly placeholder="ข้อสังเกตจาก workbook เช่น งวดหรือข้อมูลต้นทางไม่สอดคล้อง จะแสดงตรงนี้"></textarea></div>
+        <div class="privacy"><strong>สถานะระบบ</strong><br><span id="backend-status">กำลังรอ backend</span></div>
+      </div></section>
+    </div>
+    <p class="foot">IR Update Studio · ประมวลผล source file และแยกโค้ดผลลัพธ์</p>
+  </main>
+  <script>
+    const $ = selector => document.querySelector(selector);
+    const fileInput = $('#files');
+    const status = $('#status');
+    const updateButton = $('#update-code');
+    const UPDATE_API_ENDPOINT = '/api/update';
+    let selectedFiles = [];
+    const fileSize = bytes => bytes < 1048576 ? `${(bytes / 1024).toFixed(1)} KB` : `${(bytes / 1048576).toFixed(1)} MB`;
+    fileInput.addEventListener('change', () => {
+      selectedFiles = [...fileInput.files];
+      $('#file-list').replaceChildren(...selectedFiles.map(file => {
+        const row = document.createElement('div'); row.className = 'file';
+        const name = document.createElement('span'); name.textContent = file.name;
+        const size = document.createElement('em'); size.textContent = fileSize(file.size);
+        row.append(name, size); return row;
+      }));
+      status.textContent = selectedFiles.length ? `${selectedFiles.length} ไฟล์พร้อมส่ง backend` : '';
+    });
+    $('#html-code').addEventListener('input', event => $('#html-char-count').textContent = event.target.value.length.toLocaleString());
+    $('#javascript-code').addEventListener('input', event => $('#javascript-char-count').textContent = event.target.value.length.toLocaleString());
+    const toBase64 = async file => {
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      let binary = '';
+      const chunkSize = 0x8000;
+      for (let i = 0; i < bytes.length; i += chunkSize) binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+      return btoa(binary);
+    };
+    updateButton.addEventListener('click', async () => {
+      const hasCode = $('#html-code').value.trim() || $('#javascript-code').value.trim();
+      const allowedExt = ['.xlsx', '.xls', '.csv', '.tsv'];
+      if (!selectedFiles.length) { status.textContent = 'เลือก workbook หรือไฟล์ CSV/TSV ต้นทางก่อน'; fileInput.focus(); return; }
+      if (selectedFiles.some(file => !allowedExt.some(ext => file.name.toLowerCase().endsWith(ext)))) { status.textContent = 'ชนิดไฟล์ไม่ตรงกับประเภทงานที่เลือก'; fileInput.focus(); return; }
+      if (selectedFiles.reduce((sum, file) => sum + file.size, 0) > 2_400_000) { status.textContent = 'ไฟล์รวมเกิน 2.4 MB กรุณาเลือกไฟล์ขนาดเล็กลง'; fileInput.focus(); return; }
+      if ($('#html-code').value.length + $('#javascript-code').value.length > 300_000) { status.textContent = 'โค้ดรวมเกิน 300,000 ตัวอักษร'; $('#html-code').focus(); return; }
+      if (!hasCode) { status.textContent = 'วาง HTML/Vue หรือ JavaScript ของ Financial Highlights ก่อน'; $('#html-code').focus(); return; }
+      updateButton.disabled = true;
+      status.textContent = 'กำลังส่งไฟล์และโค้ดไปประมวลผล…';
+      $('#backend-status').textContent = 'กำลังประมวลผล';
+      try {
+        const payload = {
+          page_type: 'financial-highlights',
+          locale: $('#locale').value,
+          html_code: $('#html-code').value,
+          javascript_code: $('#javascript-code').value,
+          source_files: await Promise.all(selectedFiles.map(async file => ({ name: file.name, mime_type: file.type || mimeTypeFor(file.name), data_base64: await toBase64(file) })))
+        };
+        const response = await fetch(UPDATE_API_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.error || `backend ตอบกลับ ${response.status}`);
+        $('#html-result').value = result.html ?? '';
+        $('#javascript-result').value = result.javascript ?? '';
+        $('#report-result').value = [result.report, result.notes].filter(Boolean).join('\n\n');
+        document.querySelectorAll('.copy-result').forEach(button => { button.disabled = !$('#' + button.dataset.target).value; });
+        $('#backend-status').textContent = 'ประมวลผลเสร็จแล้ว';
+        status.textContent = 'อัปเดตเสร็จแล้ว · แยกผลลัพธ์ HTML/Vue และ JavaScript';
+      } catch (error) {
+        $('#backend-status').textContent = 'ประมวลผลไม่สำเร็จ';
+        status.textContent = `ประมวลผลไม่สำเร็จ: ${error.message}`;
+      } finally {
+        updateButton.disabled = false;
+      }
+    });
+    function mimeTypeFor(name) {
+      const ext = name.split('.').pop().toLowerCase();
+      return ({ xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', xls: 'application/vnd.ms-excel', csv: 'text/csv', tsv: 'text/tsv' })[ext] || 'application/octet-stream';
+    }
+    document.querySelectorAll('.copy-result').forEach(button => button.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText($('#' + button.dataset.target).value); status.textContent = `คัดลอก${button.textContent.replace('คัดลอก', '')}แล้ว`; }
+      catch { status.textContent = 'คัดลอกอัตโนมัติไม่ได้ กรุณาเลือกข้อความในช่องแล้วคัดลอก'; }
+    }));
+    $('#clear').addEventListener('click', () => {
+      $('#locale').value = 'th'; $('#html-code').value = ''; $('#javascript-code').value = '';
+      $('#html-result').value = ''; $('#javascript-result').value = ''; $('#report-result').value = '';
+      fileInput.value = ''; selectedFiles = []; $('#file-list').replaceChildren(); $('#html-char-count').textContent = '0'; $('#javascript-char-count').textContent = '0';
+      document.querySelectorAll('.copy-result').forEach(button => { button.disabled = true; });
+      $('#backend-status').textContent = 'พร้อมรับคำขอ';
+      status.textContent = '';
+    });
+    $('#backend-status').textContent = 'ต้อง deploy API และตั้งค่า OPENAI_API_KEY ก่อนใช้งาน';
+  </script>
+</body>
+</html>
